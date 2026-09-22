@@ -39,6 +39,7 @@ The dataset (`Loan_Modelling.csv`, referenced from the notebook) contains 5,000 
 ## Repository Contents
 
 - `Machine_Learning_Personal_Loan_Campaign.ipynb` — end-to-end analysis notebook covering data loading, EDA, preprocessing, model building, tuning, and business recommendations.
+- `images/` — plots exported from the notebook, used to illustrate the analysis and results below.
 
 ## Approach
 
@@ -54,6 +55,20 @@ The dataset (`Loan_Modelling.csv`, referenced from the notebook) contains 5,000 
    - Decision Tree with post-pruning (cost-complexity pruning)
 5. **Model Evaluation** — models were compared on Accuracy, Recall, Precision, and F1-score for both train and test sets to select the model that generalizes best (rather than simply maximizing training performance).
 
+## Exploratory Data Analysis
+
+**Distribution of numerical features** — Income, CCAvg, and Mortgage are all strongly right-skewed, while Age is fairly evenly spread between 40–60 years:
+
+![Feature histograms](images/01_feature_histograms.png)
+
+**Correlation heatmap** — `Income` (0.50) and `CCAvg` (0.37) are the numerical features most correlated with `Personal_Loan`; `Age` and `Experience` are almost perfectly correlated with each other (0.99), so only one is needed for modeling:
+
+![Correlation heatmap](images/02_correlation_heatmap.png)
+
+**Income vs. loan acceptance** — the single strongest visual signal in the data: customers who accepted the loan (target = 1) have a much higher and tighter income distribution than those who didn't:
+
+![Income distribution by loan acceptance](images/03_income_vs_loan.png)
+
 ## Key Results
 
 The **post-pruned Decision Tree** was selected as the final model, offering the best generalization:
@@ -65,13 +80,21 @@ The **post-pruned Decision Tree** was selected as the final model, offering the 
 | Precision | ≈ 0.929 |
 | F1-score | ≈ 0.915 |
 
-It showed a much smaller train/test performance gap than the default and class-weighted trees, which overfit the training data.
+It showed a much smaller train/test performance gap than the default and class-weighted trees, which overfit the training data:
+
+![Train vs test performance across all models](images/05_model_comparison.png)
 
 ### Top Predictors of Loan Acceptance
 - **Income** — the primary driver; customers with income below ~$104.5K rarely accept the loan.
 - **CCAvg (credit card spending)** — a strong secondary factor, especially among lower-income customers.
 - **Education** — becomes decisive among higher-income customers; more educated, higher-income customers are more likely to accept.
 - **CD Account, Family size, Experience** — provide additional, more nuanced segmentation.
+
+![Feature importances of the final model](images/04_feature_importance.png)
+
+The final post-pruned decision tree, showing how these features combine to segment customers:
+
+![Final post-pruned decision tree](images/06_final_decision_tree.png)
 
 ## Marketing Recommendations
 
